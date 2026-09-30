@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>준5급·5급 배정한자 200자 훈음 연습</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#edf7ff,#fff3f7);font-family:Arial,"Noto Sans KR",sans-serif;color:#222}
+.wrap{max-width:640px;margin:auto;padding:16px}.card{background:#fff;border-radius:28px;padding:22px;margin:12px 0;box-shadow:0 10px 35px #0001}
+h1{text-align:center;font-size:24px;margin:5px}.sub{text-align:center;color:#777;font-size:14px;line-height:1.5}
+.badge{display:inline-block;padding:6px 10px;border-radius:99px;background:#eef0ff;font-size:13px;font-weight:700}
+.hanja{font-family:"Noto Serif CJK KR","Batang",serif;font-size:100px;text-align:center;font-weight:900;margin:25px 0 12px}
+input{width:100%;padding:16px;border:2px solid #ddd;border-radius:16px;font-size:20px;text-align:center}
+input:focus{outline:0;border-color:#6374ff}button{border:0;border-radius:15px;padding:14px;font-size:16px;font-weight:800;cursor:pointer}
+.primary{width:100%;background:#5869ff;color:white;margin-top:12px}.ghost{background:#f1f2f6}
+.row{display:flex;gap:9px}.row>*{flex:1}.hidden{display:none}
+#feedback{min-height:32px;text-align:center;font-size:20px;font-weight:900;margin-top:12px}
+.answer{text-align:center;font-size:21px;font-weight:800;color:#4658bb;min-height:30px}
+.score{text-align:center;font-size:42px;font-weight:900}li{margin:7px 0}
+.note{background:#fff8dc;padding:12px;border-radius:14px;font-size:12px;line-height:1.6}
+</style></head><body><div class="wrap">
+
+<div class="card" id="start">
+<h1>📚 준5급·5급 한자 훈음 연습</h1>
+<p class="sub">한국어문회 배정한자 PDF 기준 · 총 200자<br>한자를 보고 <b>훈음(뜻과 음)</b>을 맞혀 보세요!</p>
+<br>
+<input id="name" placeholder="학생 이름 (선택)">
+<br><br>
+<div class="row">
+<button class="ghost" onclick="begin(10)">10문제</button>
+<button class="ghost" onclick="begin(20)">20문제</button>
+<button class="ghost" onclick="begin(50)">50문제</button>
+</div>
+<button class="primary" onclick="begin(200)">🚀 200자 전체 연습</button>
+<p class="sub">문제는 무작위로 출제됩니다.</p>
+</div>
+
+<div class="card hidden" id="quiz">
+<div style="display:flex;justify-content:space-between"><span class="badge" id="grade"></span><b id="count"></b></div>
+<div class="hanja" id="h"></div>
+<div class="sub">이 한자의 <b>훈음</b>을 입력하세요<br>예: 배울 학</div><br>
+<input id="answerInput" placeholder="뜻 + 음을 입력하세요" autocomplete="off">
+<button class="primary" onclick="check()">정답 확인</button>
+<div id="feedback"></div><div class="answer" id="correct"></div>
+<div class="row" style="margin-top:12px"><button class="ghost" onclick="reveal()">정답 보기</button><button class="ghost" onclick="next()">다음 ▶</button></div>
+</div>
+
+<div class="card hidden" id="result">
+<h1>🎉 연습 끝!</h1><div class="score" id="score"></div><div id="summary"></div>
+<button class="primary" onclick="location.reload()">다시 연습</button>
+</div>
+
+<div class="card note">
+<b>선생님 확인 메모</b><br>
+원본 PDF에는 200개의 한자가 있으며, 준5급 100자 + 5급 100자로 구성되어 있습니다.
+다만 준5급의 「切·節·店」 부분에 ‘온통 체’라는 추가 훈음 표기가 보여 한자 수와 1:1 대응이 불명확합니다.
+이 연습앱에서는 200자 자체는 원본 순서를 그대로 사용하고, 「節=마디 절」로 처리했습니다.
+</div>
+</div>
+<script>
+const BANK=[{"h": "價", "k": "값 가", "grade": "준5급"}, {"h": "客", "k": "손 객", "grade": "준5급"}, {"h": "格", "k": "격식 격", "grade": "준5급"}, {"h": "見", "k": "볼 견", "grade": "준5급"}, {"h": "決", "k": "결단할 결", "grade": "준5급"}, {"h": "結", "k": "맺을 결", "grade": "준5급"}, {"h": "敬", "k": "공경할 경", "grade": "준5급"}, {"h": "告", "k": "고할 고", "grade": "준5급"}, {"h": "課", "k": "공부할 과", "grade": "준5급"}, {"h": "過", "k": "과정 과", "grade": "준5급"}, {"h": "關", "k": "관계할 관", "grade": "준5급"}, {"h": "觀", "k": "볼 관", "grade": "준5급"}, {"h": "廣", "k": "넓을 광", "grade": "준5급"}, {"h": "具", "k": "갖출 구", "grade": "준5급"}, {"h": "舊", "k": "예 구", "grade": "준5급"}, {"h": "局", "k": "판 국", "grade": "준5급"}, {"h": "己", "k": "몸 기", "grade": "준5급"}, {"h": "基", "k": "터 기", "grade": "준5급"}, {"h": "念", "k": "생각 념", "grade": "준5급"}, {"h": "能", "k": "능할 능", "grade": "준5급"}, {"h": "團", "k": "둥글 단", "grade": "준5급"}, {"h": "當", "k": "마땅 당", "grade": "준5급"}, {"h": "德", "k": "클 덕", "grade": "준5급"}, {"h": "到", "k": "이를 도", "grade": "준5급"}, {"h": "獨", "k": "홀로 독", "grade": "준5급"}, {"h": "朗", "k": "밝을 랑", "grade": "준5급"}, {"h": "良", "k": "어질 량", "grade": "준5급"}, {"h": "旅", "k": "나그네 려", "grade": "준5급"}, {"h": "歷", "k": "지날 력", "grade": "준5급"}, {"h": "練", "k": "익힐 련", "grade": "준5급"}, {"h": "勞", "k": "일할 로", "grade": "준5급"}, {"h": "流", "k": "흐를 류", "grade": "준5급"}, {"h": "類", "k": "무리 류", "grade": "준5급"}, {"h": "陸", "k": "뭍 륙", "grade": "준5급"}, {"h": "望", "k": "바랄 망", "grade": "준5급"}, {"h": "法", "k": "법 법", "grade": "준5급"}, {"h": "變", "k": "변할 변", "grade": "준5급"}, {"h": "兵", "k": "병사 병", "grade": "준5급"}, {"h": "福", "k": "복 복", "grade": "준5급"}, {"h": "奉", "k": "받들 봉", "grade": "준5급"}, {"h": "士", "k": "선비 사", "grade": "준5급"}, {"h": "仕", "k": "섬길 사", "grade": "준5급"}, {"h": "史", "k": "사기 사", "grade": "준5급"}, {"h": "産", "k": "낳을 산", "grade": "준5급"}, {"h": "相", "k": "서로 상", "grade": "준5급"}, {"h": "商", "k": "장사 상", "grade": "준5급"}, {"h": "仙", "k": "신선 선", "grade": "준5급"}, {"h": "鮮", "k": "고울 선", "grade": "준5급"}, {"h": "說", "k": "말씀 설", "grade": "준5급"}, {"h": "性", "k": "성품 성", "grade": "준5급"}, {"h": "洗", "k": "씻을 세", "grade": "준5급"}, {"h": "歲", "k": "해 세", "grade": "준5급"}, {"h": "束", "k": "묶을 속", "grade": "준5급"}, {"h": "首", "k": "머리 수", "grade": "준5급"}, {"h": "宿", "k": "잘 숙", "grade": "준5급"}, {"h": "順", "k": "순할 순", "grade": "준5급"}, {"h": "識", "k": "알 식", "grade": "준5급"}, {"h": "臣", "k": "신하 신", "grade": "준5급"}, {"h": "實", "k": "열매 실", "grade": "준5급"}, {"h": "兒", "k": "아이 아", "grade": "준5급"}, {"h": "惡", "k": "악할 악", "grade": "준5급"}, {"h": "約", "k": "맺을 약", "grade": "준5급"}, {"h": "養", "k": "기를 양", "grade": "준5급"}, {"h": "要", "k": "요긴할 요", "grade": "준5급"}, {"h": "友", "k": "벗 우", "grade": "준5급"}, {"h": "雨", "k": "비 우", "grade": "준5급"}, {"h": "雲", "k": "구름 운", "grade": "준5급"}, {"h": "元", "k": "으뜸 원", "grade": "준5급"}, {"h": "偉", "k": "클 위", "grade": "준5급"}, {"h": "以", "k": "써 이", "grade": "준5급"}, {"h": "任", "k": "맡길 임", "grade": "준5급"}, {"h": "材", "k": "재목 재", "grade": "준5급"}, {"h": "財", "k": "재물 재", "grade": "준5급"}, {"h": "的", "k": "과녁 적", "grade": "준5급"}, {"h": "典", "k": "법 전", "grade": "준5급"}, {"h": "展", "k": "펼 전", "grade": "준5급"}, {"h": "傳", "k": "전할 전", "grade": "준5급"}, {"h": "切", "k": "끊을 절", "grade": "준5급"}, {"h": "節", "k": "마디 절", "grade": "준5급"}, {"h": "店", "k": "가게 점", "grade": "준5급"}, {"h": "情", "k": "뜻 정", "grade": "준5급"}, {"h": "調", "k": "고를 조", "grade": "준5급"}, {"h": "卒", "k": "마칠 졸", "grade": "준5급"}, {"h": "種", "k": "씨 종", "grade": "준5급"}, {"h": "州", "k": "고을 주", "grade": "준5급"}, {"h": "週", "k": "돌 주", "grade": "준5급"}, {"h": "知", "k": "알 지", "grade": "준5급"}, {"h": "質", "k": "바탕 질", "grade": "준5급"}, {"h": "着", "k": "붙을 착", "grade": "준5급"}, {"h": "參", "k": "참여할 참", "grade": "준5급"}, {"h": "責", "k": "꾸짖을 책", "grade": "준5급"}, {"h": "充", "k": "채울 충", "grade": "준5급"}, {"h": "宅", "k": "집 택, 댁", "grade": "준5급"}, {"h": "品", "k": "물건 품", "grade": "준5급"}, {"h": "必", "k": "반드시 필", "grade": "준5급"}, {"h": "筆", "k": "붓 필", "grade": "준5급"}, {"h": "害", "k": "해할 해", "grade": "준5급"}, {"h": "化", "k": "될 화", "grade": "준5급"}, {"h": "效", "k": "본받을 효", "grade": "준5급"}, {"h": "凶", "k": "흉할 흉", "grade": "준5급"}, {"h": "可", "k": "옳을 가", "grade": "5급"}, {"h": "加", "k": "더할 가", "grade": "5급"}, {"h": "改", "k": "고칠 개", "grade": "5급"}, {"h": "去", "k": "갈 거", "grade": "5급"}, {"h": "擧", "k": "들 거", "grade": "5급"}, {"h": "件", "k": "물건 건", "grade": "5급"}, {"h": "建", "k": "세울 건", "grade": "5급"}, {"h": "健", "k": "굳셀 건", "grade": "5급"}, {"h": "景", "k": "볕 경", "grade": "5급"}, {"h": "輕", "k": "가벼울 경", "grade": "5급"}, {"h": "競", "k": "다툴 경", "grade": "5급"}, {"h": "固", "k": "굳을 고", "grade": "5급"}, {"h": "考", "k": "생각할 고", "grade": "5급"}, {"h": "曲", "k": "굽을 곡", "grade": "5급"}, {"h": "橋", "k": "다리 교", "grade": "5급"}, {"h": "救", "k": "구원할 구", "grade": "5급"}, {"h": "貴", "k": "귀할 귀", "grade": "5급"}, {"h": "規", "k": "법 규", "grade": "5급"}, {"h": "給", "k": "줄 급", "grade": "5급"}, {"h": "技", "k": "재주 기", "grade": "5급"}, {"h": "汽", "k": "물끓는김 기", "grade": "5급"}, {"h": "期", "k": "기약할 기", "grade": "5급"}, {"h": "吉", "k": "길할 길", "grade": "5급"}, {"h": "壇", "k": "단 단", "grade": "5급"}, {"h": "談", "k": "말씀 담", "grade": "5급"}, {"h": "島", "k": "섬 도", "grade": "5급"}, {"h": "都", "k": "도읍 도", "grade": "5급"}, {"h": "落", "k": "떨어질 락", "grade": "5급"}, {"h": "冷", "k": "찰 랭", "grade": "5급"}, {"h": "量", "k": "헤아릴 량", "grade": "5급"}, {"h": "令", "k": "하여금 령", "grade": "5급"}, {"h": "領", "k": "거느릴 령", "grade": "5급"}, {"h": "料", "k": "헤아릴 료", "grade": "5급"}, {"h": "馬", "k": "말 마", "grade": "5급"}, {"h": "末", "k": "끝 말", "grade": "5급"}, {"h": "亡", "k": "망할 망", "grade": "5급"}, {"h": "買", "k": "살 매", "grade": "5급"}, {"h": "賣", "k": "팔 매", "grade": "5급"}, {"h": "無", "k": "없을 무", "grade": "5급"}, {"h": "倍", "k": "곱 배", "grade": "5급"}, {"h": "比", "k": "견줄 비", "grade": "5급"}, {"h": "費", "k": "쓸 비", "grade": "5급"}, {"h": "鼻", "k": "코 비", "grade": "5급"}, {"h": "氷", "k": "얼음 빙", "grade": "5급"}, {"h": "査", "k": "조사할 사", "grade": "5급"}, {"h": "思", "k": "생각 사", "grade": "5급"}, {"h": "寫", "k": "베낄 사", "grade": "5급"}, {"h": "賞", "k": "상줄 상", "grade": "5급"}, {"h": "序", "k": "차례 서", "grade": "5급"}, {"h": "船", "k": "배 선", "grade": "5급"}, {"h": "善", "k": "착할 선", "grade": "5급"}, {"h": "選", "k": "가릴 선", "grade": "5급"}, {"h": "示", "k": "보일 시", "grade": "5급"}, {"h": "案", "k": "책상 안", "grade": "5급"}, {"h": "魚", "k": "물고기 어", "grade": "5급"}, {"h": "漁", "k": "고기잡을 어", "grade": "5급"}, {"h": "億", "k": "억 억", "grade": "5급"}, {"h": "熱", "k": "더울 열", "grade": "5급"}, {"h": "葉", "k": "잎 엽", "grade": "5급"}, {"h": "屋", "k": "집 옥", "grade": "5급"}, {"h": "完", "k": "완전할 완", "grade": "5급"}, {"h": "曜", "k": "빛날 요", "grade": "5급"}, {"h": "浴", "k": "목욕할 욕", "grade": "5급"}, {"h": "牛", "k": "소 우", "grade": "5급"}, {"h": "雄", "k": "수컷 웅", "grade": "5급"}, {"h": "院", "k": "집 원", "grade": "5급"}, {"h": "原", "k": "언덕, 근원 원", "grade": "5급"}, {"h": "願", "k": "원할 원", "grade": "5급"}, {"h": "位", "k": "자리 위", "grade": "5급"}, {"h": "耳", "k": "귀 이", "grade": "5급"}, {"h": "因", "k": "인할 인", "grade": "5급"}, {"h": "再", "k": "두 재", "grade": "5급"}, {"h": "災", "k": "재앙 재", "grade": "5급"}, {"h": "爭", "k": "다툴 쟁", "grade": "5급"}, {"h": "貯", "k": "쌓을 저", "grade": "5급"}, {"h": "赤", "k": "붉을 적", "grade": "5급"}, {"h": "停", "k": "머무를 정", "grade": "5급"}, {"h": "操", "k": "잡을 조", "grade": "5급"}, {"h": "終", "k": "마칠 종", "grade": "5급"}, {"h": "罪", "k": "허물 죄", "grade": "5급"}, {"h": "止", "k": "그칠 지", "grade": "5급"}, {"h": "唱", "k": "부를 창", "grade": "5급"}, {"h": "鐵", "k": "쇠 철", "grade": "5급"}, {"h": "初", "k": "처음 초", "grade": "5급"}, {"h": "最", "k": "가장 최", "grade": "5급"}, {"h": "祝", "k": "빌 축", "grade": "5급"}, {"h": "致", "k": "이를 치", "grade": "5급"}, {"h": "則", "k": "법칙 칙", "grade": "5급"}, {"h": "他", "k": "다를 타", "grade": "5급"}, {"h": "打", "k": "칠 타", "grade": "5급"}, {"h": "卓", "k": "높을 탁", "grade": "5급"}, {"h": "炭", "k": "숯 탄", "grade": "5급"}, {"h": "板", "k": "널빤지 판", "grade": "5급"}, {"h": "敗", "k": "패할 패", "grade": "5급"}, {"h": "河", "k": "물 하", "grade": "5급"}, {"h": "寒", "k": "찰 한", "grade": "5급"}, {"h": "許", "k": "허락 허", "grade": "5급"}, {"h": "湖", "k": "호수 호", "grade": "5급"}, {"h": "患", "k": "근심 환", "grade": "5급"}, {"h": "黑", "k": "검을 흑", "grade": "5급"}];
+let deck=[],idx=0,total=0,score=0,done=false,wrong=[];
+const $=x=>document.getElementById(x);
+function norm(s){return s.replace(/\s+/g,'').replace(/[()（）]/g,'').trim()}
+function begin(n){
+ total=n;idx=0;score=0;wrong=[];
+ deck=[...BANK].sort(()=>Math.random()-0.5).slice(0,n);
+ $('start').classList.add('hidden');$('quiz').classList.remove('hidden');load();
+}
+function load(){
+ done=false;$('feedback').textContent='';$('correct').textContent='';$('answerInput').value='';
+ const x=deck[idx];$('h').textContent=x.h;$('grade').textContent=x.grade;$('count').textContent=(idx+1)+' / '+total;
+ $('answerInput').focus();
+}
+function check(){
+ if(done)return;
+ const x=deck[idx],u=norm($('answerInput').value),c=norm(x.k);
+ done=true;
+ if(u===c || (u.length>=2 && c.includes(u))){
+  score++;$('feedback').textContent='⭕ 정답입니다!';
+ }else{
+  wrong.push(x);$('feedback').textContent='❌ 아쉬워요! 정답을 확인해 보세요.';$('correct').textContent='정답: '+x.k;
+ }
+}
+function reveal(){const x=deck[idx];done=true;$('correct').textContent='정답: '+x.k}
+function next(){
+ if(!done){check();return}
+ idx++;if(idx>=total)finish();else load();
+}
+function finish(){
+ $('quiz').classList.add('hidden');$('result').classList.remove('hidden');
+ $('score').textContent=score+' / '+total+'점';
+ const name=$('name').value.trim()||'학생';
+ let s='<p style="text-align:center"><b>'+name+'</b> 학생</p>';
+ if(wrong.length){s+='<h3>📌 다시 연습할 한자</h3><ul>'+wrong.map(x=>'<li><b>'+x.h+'</b> — '+x.k+'</li>').join('')+'</ul>'}
+ else s+='<p style="text-align:center">✨ 모두 맞혔어요!</p>';
+ $('summary').innerHTML=s;
+}
+$('answerInput').addEventListener('keydown',e=>{if(e.key==='Enter')check()});
+</script></body></html>
