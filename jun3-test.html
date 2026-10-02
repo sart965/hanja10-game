@@ -14,8 +14,9 @@ button{border:0;border-radius:15px;padding:14px;font-size:16px;font-weight:800;c
 <div class="card" id="start"><h1>📝 준3급시험 훈음테스트</h1>
 <p class="sub">한국어문회 준3급 배정한자 기준 · 총 500자<br>한자를 보고 <b>훈음(뜻과 음)</b>을 맞혀 보세요!</p><br>
 <input id="name" placeholder="학생 이름 (선택)"><br><br>
-<div class="row"><button class="ghost" onclick="begin(10)">10문제</button><button class="ghost" onclick="begin(20)">20문제</button><button class="ghost" onclick="begin(50)">50문제</button></div>
-<div class="row" style="margin-top:9px"><button class="ghost" onclick="begin(100)">100문제</button><button class="primary" style="margin-top:0" onclick="begin(500)">🚀 500자</button></div>
+<div class="row"><button class="ghost" onclick="begin(10)">10문제</button><button class="ghost" onclick="begin(20)">20문제</button><button class="ghost" onclick="begin(30)">30문제</button></div>
+<div class="row" style="margin-top:9px"><button class="ghost" onclick="begin(50)">50문제</button><button class="ghost" onclick="begin(100)">100문제</button><button class="ghost" onclick="begin(200)">200문제</button></div>
+<div class="row" style="margin-top:9px"><button class="ghost" onclick="begin(300)">300문제</button><button class="ghost" onclick="begin(400)">400문제</button><button class="primary" style="margin-top:0" onclick="begin(500)">🚀 500문제</button></div>
 <p class="sub">문제는 무작위로 출제됩니다.</p></div>
 <div class="card hidden" id="quiz"><div style="display:flex;justify-content:space-between"><span class="badge" id="grade"></span><b id="count"></b></div>
 <div class="hanja" id="h"></div><div class="sub">이 한자의 <b>훈음</b>을 입력하세요<br>예: 아름다울 가</div><br>
