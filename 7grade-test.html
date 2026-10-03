@@ -64,7 +64,7 @@ li{margin:7px 0}
 <h1>🎉 연습 끝!</h1>
 <div class="score" id="score"></div>
 <div id="summary"></div>
-<button class="primary" onclick="location.reload()">다시 연습</button>
+<button class="primary" id="retryBtn" onclick="retryWrong()">다시 연습</button>
 </div>
 </div>
 
@@ -148,12 +148,27 @@ function next(){
  if(idx<quiz.length-1){idx++;show();}
  else finish();
 }
+function retryWrong(){
+ if(!wrong.length){ location.reload(); return; }
+ quiz=shuffle(wrong.map(q=>({h:q.h,a:q.a})));
+ idx=0;
+ score=0;
+ checked=false;
+ attempts=0;
+ wrong=[];
+ document.getElementById("result").classList.add("hidden");
+ document.getElementById("quiz").classList.remove("hidden");
+ document.getElementById("grade").textContent="틀린 문제 · "+quiz.length+"문제";
+ show();
+}
+
 function finish(){
  document.getElementById("quiz").classList.add("hidden");
  document.getElementById("result").classList.remove("hidden");
  const pct=Math.round(score/quiz.length*100);
  document.getElementById("score").textContent=score+" / "+quiz.length+"점";
  let html="<p style='text-align:center;font-weight:800'>정답률 "+pct+"%</p>";
+ document.getElementById("retryBtn").textContent=wrong.length ? "🔄 틀린 "+wrong.length+"문제 다시 풀기" : "다시 연습";
  if(wrong.length){
    html+="<h3>📌 다시 공부할 한자</h3><ul>";
    wrong.forEach(q=>{html+="<li class='wrong'><b>"+q.h+"</b> → "+q.a+"</li>"});
