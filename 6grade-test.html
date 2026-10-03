@@ -64,7 +64,7 @@ function begin(n){
 function load(){
  done=false;attempts=0;$('feedback').textContent='';$('correct').textContent='';$('answerInput').value='';
  const x=deck[idx];$('h').textContent=x.h;$('grade').textContent=x.grade;$('count').textContent=(idx+1)+' / '+total;
- $('answerInput').focus();
+ $('answerInput').disabled=false;$('answerInput').focus();
 }
 function check(){
  if(done)return;
