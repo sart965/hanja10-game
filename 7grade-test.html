@@ -82,7 +82,7 @@ const bank=[
 ["下","아래 하"],["夏","여름 하"],["漢","한나라 한"],["海","바다 해"],["花","꽃 화"],["話","말씀 화 / 말할 화"],["活","살 활"],["孝","효도 효"],["後","뒤 후"],["休","쉴 휴"]
 ];
 
-let quiz=[],idx=0,score=0,checked=false,wrong=[];
+let quiz=[],idx=0,score=0,checked=false,wrong=[],attempts=0;
 
 function shuffle(a){
  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
@@ -95,7 +95,7 @@ function begin(n){
  const name=document.getElementById("name").value.trim();
  if(n>bank.length)n=bank.length;
  quiz=shuffle(bank.map(x=>({h:x[0],a:x[1]})).slice()).slice(0,n);
- idx=0;score=0;checked=false;wrong=[];
+ idx=0;score=0;checked=false;wrong=[];attempts=0;
  document.getElementById("start").classList.add("hidden");
  document.getElementById("quiz").classList.remove("hidden");
  document.getElementById("grade").textContent="7급 · "+n+"문제";
@@ -103,6 +103,7 @@ function begin(n){
 }
 function show(){
  checked=false;
+ attempts=0;
  document.getElementById("count").textContent=(idx+1)+" / "+quiz.length;
  document.getElementById("h").textContent=quiz[idx].h;
  document.getElementById("answerInput").value="";
@@ -115,18 +116,31 @@ function check(){
  if(checked)return;
  const q=quiz[idx], user=norm(document.getElementById("answerInput").value), ans=norm(q.a);
  if(!user)return;
- checked=true;
  const ok=user===ans || (user.length>=2 && ans.includes(user));
  if(ok){
+   checked=true;
    score++;
    document.getElementById("feedback").textContent="⭕ 정답입니다!";
+   document.getElementById("correct").textContent="";
+   document.getElementById("answerInput").disabled=true;
  }else{
-   wrong.push(q);
-   document.getElementById("feedback").textContent="❌ 다시 확인해 보세요!";
+   attempts++;
+   if(attempts===1){
+     document.getElementById("feedback").textContent="❌ 아쉬워요! 한 번 더 생각해 보세요.";
+     document.getElementById("correct").textContent="";
+     document.getElementById("answerInput").value="";
+     document.getElementById("answerInput").focus();
+   }else{
+     checked=true;
+     wrong.push(q);
+     document.getElementById("feedback").textContent="❌ 두 번 도전했어요. 다음 문제에서 다시 만나요!";
+     document.getElementById("correct").textContent="정답: "+q.a;
+     document.getElementById("answerInput").disabled=true;
+   }
  }
- document.getElementById("correct").textContent="정답: "+q.a;
 }
 function reveal(){
+ if(attempts<1 || checked)return;
  const q=quiz[idx];
  document.getElementById("correct").textContent="정답: "+q.a;
 }
