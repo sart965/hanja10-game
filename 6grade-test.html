@@ -47,45 +47,77 @@ input:focus{outline:0;border-color:#6374ff}button{border:0;border-radius:15px;pa
 
 <div class="card hidden" id="result">
 <h1>🎉 연습 끝!</h1><div class="score" id="score"></div><div id="summary"></div>
-<button class="primary" onclick="location.reload()">다시 연습</button>
+<button class="primary" id="retryBtn" onclick="retryWrong()">다시 연습</button>
 </div>
 
 
 <script>
 const BANK=[{"h":"各","k":"각각 각","grade":"6급"},{"h":"角","k":"뿔 각","grade":"6급"},{"h":"界","k":"지경 계","grade":"6급"},{"h":"計","k":"셀 계","grade":"6급"},{"h":"高","k":"높을 고","grade":"6급"},{"h":"公","k":"공평할 공","grade":"6급"},{"h":"共","k":"한가지 공","grade":"6급"},{"h":"功","k":"공 공","grade":"6급"},{"h":"科","k":"과목 과","grade":"6급"},{"h":"果","k":"실과 과","grade":"6급"},{"h":"光","k":"빛 광","grade":"6급"},{"h":"球","k":"공 구","grade":"6급"},{"h":"今","k":"이제 금","grade":"6급"},{"h":"急","k":"급할 급","grade":"6급"},{"h":"短","k":"짧을 단","grade":"6급"},{"h":"堂","k":"집 당","grade":"6급"},{"h":"代","k":"대신할 대","grade":"6급"},{"h":"對","k":"대할 대","grade":"6급"},{"h":"圖","k":"그림 도","grade":"6급"},{"h":"讀","k":"읽을 독","grade":"6급"},{"h":"童","k":"아이 동","grade":"6급"},{"h":"等","k":"무리 등","grade":"6급"},{"h":"樂","k":"즐길 락/노래 악/좋아할 요","grade":"6급"},{"h":"利","k":"이할 리/이로울 리","grade":"6급"},{"h":"理","k":"다스릴 리","grade":"6급"},{"h":"明","k":"밝을 명","grade":"6급"},{"h":"聞","k":"들을 문","grade":"6급"},{"h":"半","k":"반 반","grade":"6급"},{"h":"反","k":"돌이킬 반/돌아올 반","grade":"6급"},{"h":"班","k":"나눌 반","grade":"6급"},{"h":"發","k":"필 발","grade":"6급"},{"h":"放","k":"놓을 방","grade":"6급"},{"h":"部","k":"떼 부/거느릴 부","grade":"6급"},{"h":"分","k":"나눌 분","grade":"6급"},{"h":"社","k":"모일 사","grade":"6급"},{"h":"書","k":"글 서","grade":"6급"},{"h":"線","k":"줄 선","grade":"6급"},{"h":"雪","k":"눈 설","grade":"6급"},{"h":"成","k":"이룰 성","grade":"6급"},{"h":"省","k":"살필 성/덜 생","grade":"6급"},{"h":"消","k":"사라질 소","grade":"6급"},{"h":"術","k":"재주 술","grade":"6급"},{"h":"始","k":"비로소 시","grade":"6급"},{"h":"身","k":"몸 신","grade":"6급"},{"h":"神","k":"귀신 신","grade":"6급"},{"h":"信","k":"믿을 신","grade":"6급"},{"h":"新","k":"새 신","grade":"6급"},{"h":"弱","k":"약할 약","grade":"6급"},{"h":"藥","k":"약 약","grade":"6급"},{"h":"業","k":"업 업","grade":"6급"},{"h":"勇","k":"날랠 용","grade":"6급"},{"h":"用","k":"쓸 용","grade":"6급"},{"h":"運","k":"옮길 운","grade":"6급"},{"h":"音","k":"소리 음","grade":"6급"},{"h":"飮","k":"마실 음","grade":"6급"},{"h":"意","k":"뜻 의","grade":"6급"},{"h":"作","k":"지을 작","grade":"6급"},{"h":"昨","k":"어제 작","grade":"6급"},{"h":"才","k":"재주 재","grade":"6급"},{"h":"戰","k":"싸울 전","grade":"6급"},{"h":"庭","k":"뜰 정","grade":"6급"},{"h":"第","k":"차례 제","grade":"6급"},{"h":"題","k":"제목 제","grade":"6급"},{"h":"注","k":"부을 주","grade":"6급"},{"h":"集","k":"모을 집","grade":"6급"},{"h":"窓","k":"창 창","grade":"6급"},{"h":"淸","k":"맑을 청","grade":"6급"},{"h":"體","k":"몸 체","grade":"6급"},{"h":"表","k":"겉, 거죽 표","grade":"6급"},{"h":"風","k":"바람 풍","grade":"6급"},{"h":"幸","k":"다행 행","grade":"6급"},{"h":"現","k":"나타날 현","grade":"6급"},{"h":"形","k":"모양 형","grade":"6급"},{"h":"和","k":"화할 화","grade":"6급"},{"h":"會","k":"모일 회","grade":"6급"},{"h":"感","k":"느낄 감","grade":"6급"},{"h":"強","k":"강할 강","grade":"6급"},{"h":"開","k":"열 개","grade":"6급"},{"h":"京","k":"서울 경","grade":"6급"},{"h":"古","k":"옛 고","grade":"6급"},{"h":"苦","k":"쓸 고","grade":"6급"},{"h":"交","k":"사귈 교","grade":"6급"},{"h":"區","k":"구분할 구","grade":"6급"},{"h":"郡","k":"고을 군","grade":"6급"},{"h":"近","k":"가까울 근","grade":"6급"},{"h":"根","k":"뿌리 근","grade":"6급"},{"h":"級","k":"등급 급","grade":"6급"},{"h":"多","k":"많을 다","grade":"6급"},{"h":"待","k":"기다릴 대","grade":"6급"},{"h":"度","k":"법도 도/헤아릴 탁","grade":"6급"},{"h":"頭","k":"머리 두","grade":"6급"},{"h":"例","k":"본보기, 법식 례","grade":"6급"},{"h":"禮","k":"예도 례","grade":"6급"},{"h":"路","k":"길 로","grade":"6급"},{"h":"綠","k":"푸를 록","grade":"6급"},{"h":"李","k":"오얏, 성 리","grade":"6급"},{"h":"目","k":"눈 목","grade":"6급"},{"h":"米","k":"쌀 미","grade":"6급"},{"h":"美","k":"아름다울 미","grade":"6급"},{"h":"朴","k":"성, 소박할 박","grade":"6급"},{"h":"番","k":"차례 번","grade":"6급"},{"h":"別","k":"다를, 나눌 별","grade":"6급"},{"h":"病","k":"병 병","grade":"6급"},{"h":"服","k":"옷 복","grade":"6급"},{"h":"本","k":"근본 본","grade":"6급"},{"h":"使","k":"하여금, 부릴 사","grade":"6급"},{"h":"死","k":"죽을 사","grade":"6급"},{"h":"石","k":"돌 석","grade":"6급"},{"h":"席","k":"자리 석","grade":"6급"},{"h":"速","k":"빠를 속","grade":"6급"},{"h":"孫","k":"손자 손","grade":"6급"},{"h":"樹","k":"나무 수","grade":"6급"},{"h":"習","k":"익힐 습","grade":"6급"},{"h":"勝","k":"이길 승","grade":"6급"},{"h":"式","k":"법 식","grade":"6급"},{"h":"失","k":"잃을 실","grade":"6급"},{"h":"愛","k":"사랑 애","grade":"6급"},{"h":"夜","k":"밤 야","grade":"6급"},{"h":"野","k":"들 야","grade":"6급"},{"h":"洋","k":"큰바다 양","grade":"6급"},{"h":"陽","k":"볕 양","grade":"6급"},{"h":"言","k":"말씀 언","grade":"6급"},{"h":"永","k":"길 영","grade":"6급"},{"h":"英","k":"꽃부리 영","grade":"6급"},{"h":"溫","k":"따뜻할 온","grade":"6급"},{"h":"園","k":"동산 원","grade":"6급"},{"h":"遠","k":"멀 원","grade":"6급"},{"h":"由","k":"말미암을 유","grade":"6급"},{"h":"油","k":"기름 유","grade":"6급"},{"h":"銀","k":"은 은","grade":"6급"},{"h":"衣","k":"옷 의","grade":"6급"},{"h":"醫","k":"의원 의","grade":"6급"},{"h":"者","k":"놈, 사람 자","grade":"6급"},{"h":"章","k":"글 장","grade":"6급"},{"h":"在","k":"있을 재","grade":"6급"},{"h":"定","k":"정할 정","grade":"6급"},{"h":"朝","k":"아침 조","grade":"6급"},{"h":"族","k":"겨레 족","grade":"6급"},{"h":"晝","k":"낮 주","grade":"6급"},{"h":"親","k":"친할 친","grade":"6급"},{"h":"太","k":"클 태","grade":"6급"},{"h":"通","k":"통할 통","grade":"6급"},{"h":"特","k":"특별할 특","grade":"6급"},{"h":"合","k":"합할 합","grade":"6급"},{"h":"行","k":"다닐 행/항렬 항","grade":"6급"},{"h":"向","k":"향할 향","grade":"6급"},{"h":"號","k":"이름, 부를 호","grade":"6급"},{"h":"畫","k":"그림 화/그을 획","grade":"6급"},{"h":"黃","k":"누를 황","grade":"6급"},{"h":"訓","k":"가르칠 훈","grade":"6급"}];
-let deck=[],idx=0,total=0,score=0,done=false,wrong=[];
+let deck=[],idx=0,total=0,score=0,done=false,wrong=[],attempts=0;
 const $=x=>document.getElementById(x);
 function norm(s){return s.replace(/\s+/g,'').replace(/[()（）]/g,'').trim()}
 function begin(n){
- total=n;idx=0;score=0;wrong=[];
+ total=n;idx=0;score=0;wrong=[];attempts=0;
  deck=[...BANK].sort(()=>Math.random()-0.5).slice(0,n);
  $('start').classList.add('hidden');$('quiz').classList.remove('hidden');load();
 }
 function load(){
- done=false;$('feedback').textContent='';$('correct').textContent='';$('answerInput').value='';
+ done=false;attempts=0;$('feedback').textContent='';$('correct').textContent='';$('answerInput').value='';
  const x=deck[idx];$('h').textContent=x.h;$('grade').textContent=x.grade;$('count').textContent=(idx+1)+' / '+total;
  $('answerInput').focus();
 }
 function check(){
  if(done)return;
  const x=deck[idx],u=norm($('answerInput').value),c=norm(x.k);
- done=true;
- if(u===c || (u.length>=2 && c.includes(u))){
-  score++;$('feedback').textContent='⭕ 정답입니다!';
+ if(!u)return;
+ const ok=u===c || (u.length>=2 && c.includes(u));
+ if(ok){
+  done=true;
+  score++;
+  $('feedback').textContent='⭕ 정답입니다!';
+  $('correct').textContent='';
+  $('answerInput').disabled=true;
  }else{
-  wrong.push(x);$('feedback').textContent='❌ 아쉬워요! 정답을 확인해 보세요.';$('correct').textContent='정답: '+x.k;
+  attempts++;
+  if(attempts===1){
+   $('feedback').textContent='❌ 아쉬워요! 한 번 더 생각해 보세요.';
+   $('correct').textContent='';
+   $('answerInput').value='';
+   $('answerInput').focus();
+  }else{
+   done=true;
+   wrong.push(x);
+   $('feedback').textContent='❌ 두 번 도전했어요. 다음 문제에서 다시 만나요!';
+   $('correct').textContent='정답: '+x.k;
+   $('answerInput').disabled=true;
+  }
  }
 }
-function reveal(){const x=deck[idx];done=true;$('correct').textContent='정답: '+x.k}
+function reveal(){
+ if(attempts<1 || done)return;
+ const x=deck[idx];
+ $('correct').textContent='정답: '+x.k;
+}
 function next(){
  if(!done){check();return}
  idx++;if(idx>=total)finish();else load();
 }
+function retryWrong(){
+ if(!wrong.length){location.reload();return}
+ deck=[...wrong].sort(()=>Math.random()-0.5);
+ total=deck.length;idx=0;score=0;wrong=[];attempts=0;
+ $('result').classList.add('hidden');
+ $('quiz').classList.remove('hidden');
+ $('grade').textContent='틀린 문제 다시 풀기';
+ load();
+}
+
 function finish(){
  $('quiz').classList.add('hidden');$('result').classList.remove('hidden');
  $('score').textContent=score+' / '+total+'점';
  const name=$('name').value.trim()||'학생';
  let s='<p style="text-align:center"><b>'+name+'</b> 학생</p>';
+ $('retryBtn').textContent=wrong.length?'🔄 틀린 '+wrong.length+'문제 다시 풀기':'다시 연습';
  if(wrong.length){s+='<h3>📌 다시 연습할 한자</h3><ul>'+wrong.map(x=>'<li><b>'+x.h+'</b> — '+x.k+'</li>').join('')+'</ul>'}
  else s+='<p style="text-align:center">✨ 모두 맞혔어요!</p>';
  $('summary').innerHTML=s;
