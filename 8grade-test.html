@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#5869ff">
+<title>8급시험 훈음테스트</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#edf7ff,#fff3f7);font-family:Arial,"Noto Sans KR",sans-serif;color:#222}
+.wrap{max-width:640px;margin:auto;padding:16px}
+.card{background:#fff;border-radius:28px;padding:22px;margin:12px 0;box-shadow:0 10px 35px #0001}
+h1{text-align:center;font-size:25px;margin:5px 0 10px}
+.sub{text-align:center;color:#777;font-size:14px;line-height:1.55}
+.badge{display:inline-block;padding:6px 10px;border-radius:99px;background:#eef0ff;font-size:13px;font-weight:700}
+.hanja{font-family:"Noto Serif CJK KR","Batang",serif;font-size:105px;text-align:center;font-weight:900;margin:25px 0 12px}
+input{width:100%;padding:16px;border:2px solid #ddd;border-radius:16px;font-size:20px;text-align:center}
+input:focus{outline:0;border-color:#6374ff}
+button{border:0;border-radius:15px;padding:14px;font-size:16px;font-weight:800;cursor:pointer}
+.primary{width:100%;background:#5869ff;color:white;margin-top:12px}
+.ghost{background:#f1f2f6}
+.hidden{display:none}
+#feedback{min-height:32px;text-align:center;font-size:20px;font-weight:900;margin-top:12px}
+.answer{text-align:center;font-size:21px;font-weight:800;color:#4658bb;min-height:30px}
+.score{text-align:center;font-size:42px;font-weight:900}
+li{margin:7px 0}
+.wrong{background:#fff5f5;border-radius:14px;padding:10px 12px;margin:7px 0}
+@media(max-width:480px){.hanja{font-size:88px}h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card" id="start">
+<h1>📝 8급시험 훈음테스트</h1>
+<p class="sub">8급 배정한자 기준 · 총 50자<br>한자를 보고 <b>훈음(뜻과 음)</b>을 맞혀 보세요!</p>
+<br>
+<input id="name" placeholder="학생 이름 (선택)">
+<br><br>
+<button class="primary" onclick="begin()">🚀 50자 전체 연습 시작</button>
+<p class="sub">50문제가 모두 무작위로 출제됩니다.</p>
+</div>
+
+<div class="card hidden" id="quiz">
+<div style="display:flex;justify-content:space-between"><span class="badge">8급 · 50문제</span><b id="count"></b></div>
+<div class="hanja" id="h"></div>
+<div class="sub">이 한자의 <b>훈음</b>을 입력하세요<br>예: 가르칠 교</div><br>
+<input id="answerInput" placeholder="뜻 + 음을 입력하세요" autocomplete="off">
+<button class="primary" onclick="check()">정답 확인</button>
+<div id="feedback"></div>
+<div class="answer" id="correct"></div>
+<div class="row" style="display:flex;gap:9px;margin-top:12px">
+<button class="ghost" style="flex:1" onclick="reveal()">정답 보기</button>
+<button class="ghost" style="flex:1" onclick="next()">다음 ▶</button>
+</div>
+</div>
+
+<div class="card hidden" id="result">
+<h1>🎉 연습 끝!</h1>
+<div class="score" id="score"></div>
+<div id="summary"></div>
+<button class="primary" id="retryBtn" onclick="retryWrong()">다시 연습</button>
+</div>
+</div>
+
+<script>
+const bank=[
+["敎","가르칠 교"],["校","학교 교"],["九","아홉 구"],["國","나라 국"],["軍","군사 군"],["金","쇠 금 / 성 김"],
+["南","남녘 남"],["女","여자 여(녀)"],["年","해 년"],["大","큰 대"],["東","동녘 동"],["六","여섯 륙"],
+["萬","일만 만"],["母","어머니 모"],["木","나무 목"],["門","문 문"],["民","백성 민"],["白","흰 백"],
+["父","아버지 부"],["北","북녘 북"],["四","넉 사"],["山","메 산"],["三","석 삼"],["生","날 생"],
+["西","서녘 서"],["先","먼저 선"],["小","작을 소"],["水","물 수"],["室","집/방 실"],["十","열 십"],
+["五","다섯 오"],["王","임금 왕"],["外","바깥 외"],["月","달 월"],["二","두 이"],["人","사람 인"],
+["一","한 일"],["日","날/해 일"],["長","길/어른 장"],["弟","아우 제"],["中","가운데 중"],["靑","푸를 청"],
+["寸","마디 촌"],["七","일곱 칠"],["土","흙 토"],["八","여덟 팔"],["學","배울 학"],["韓","한국/나라 한"],
+["兄","형/맏 형"],["火","불 화"]
+];
+let quiz=[],idx=0,score=0,checked=false,wrong=[],attempts=0;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function norm(s){return(s||"").replace(/[\s·ㆍ,，.。/／]+/g,"").toLowerCase()}
+function begin(){
+ quiz=shuffle(bank.map(x=>({h:x[0],a:x[1]})).slice());
+ idx=0;score=0;checked=false;wrong=[];attempts=0;
+ document.getElementById("start").classList.add("hidden");
+ document.getElementById("quiz").classList.remove("hidden");
+ show();
+}
+function show(){
+ checked=false;attempts=0;
+ document.getElementById("count").textContent=(idx+1)+" / 50";
+ document.getElementById("h").textContent=quiz[idx].h;
+ document.getElementById("answerInput").value="";
+ document.getElementById("answerInput").disabled=false;
+ document.getElementById("feedback").textContent="";
+ document.getElementById("correct").textContent="";
+ setTimeout(()=>document.getElementById("answerInput").focus(),50);
+}
+function check(){
+ if(checked)return;
+ const q=quiz[idx],user=norm(document.getElementById("answerInput").value),ans=norm(q.a);
+ if(!user)return;
+ const ok=user===ans||(user.length>=2&&ans.includes(user));
+ if(ok){
+  checked=true;score++;
+  document.getElementById("feedback").textContent="⭕ 정답입니다!";
+  document.getElementById("correct").textContent="";
+  document.getElementById("answerInput").disabled=true;
+ }else{
+  attempts++;
+  if(attempts===1){
+   document.getElementById("feedback").textContent="❌ 아쉬워요! 한 번 더 생각해 보세요.";
+   document.getElementById("correct").textContent="";
+   document.getElementById("answerInput").value="";
+   document.getElementById("answerInput").focus();
+  }else{
+   checked=true;wrong.push(q);
+   document.getElementById("feedback").textContent="❌ 두 번 도전했어요. 다음 문제에서 다시 만나요!";
+   document.getElementById("correct").textContent="정답: "+q.a;
+   document.getElementById("answerInput").disabled=true;
+  }
+ }
+}
+function reveal(){
+ if(attempts<1||checked)return;
+ document.getElementById("correct").textContent="정답: "+quiz[idx].a;
+}
+function next(){
+ if(!checked)return;
+ if(idx<quiz.length-1){idx++;show()}else finish();
+}
+function retryWrong(){
+ if(!wrong.length){location.reload();return}
+ quiz=shuffle(wrong.map(q=>({h:q.h,a:q.a})));
+ idx=0;score=0;checked=false;attempts=0;wrong=[];
+ document.getElementById("result").classList.add("hidden");
+ document.getElementById("quiz").classList.remove("hidden");
+ show();
+}
+function finish(){
+ document.getElementById("quiz").classList.add("hidden");
+ document.getElementById("result").classList.remove("hidden");
+ const pct=Math.round(score/quiz.length*100);
+ document.getElementById("score").textContent=score+" / "+quiz.length+"점";
+ let html="<p style='text-align:center;font-weight:800'>정답률 "+pct+"%</p>";
+ document.getElementById("retryBtn").textContent=wrong.length?"🔄 틀린 "+wrong.length+"문제 다시 풀기":"다시 연습";
+ if(wrong.length){
+  html+="<h3>📌 다시 공부할 한자</h3><ul>";
+  wrong.forEach(q=>{html+="<li class='wrong'><b>"+q.h+"</b> → "+q.a+"</li>"});
+  html+="</ul>";
+ }else html+="<p style='text-align:center'>🎊 50자 모두 정답이에요!</p>";
+ document.getElementById("summary").innerHTML=html;
+}
+document.getElementById("answerInput").addEventListener("keydown",e=>{if(e.key==="Enter")check()});
+</script>
+</body>
+</html>
