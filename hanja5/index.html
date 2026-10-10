@@ -18,7 +18,15 @@ const M=MRAW.split(";").map(x=>x.split("|")).filter(x=>x.length===2);
 const R=RRAW.split(";").map(x=>x.split("|")).filter(x=>x.length===2);
 const norm=s=>(s||"").normalize("NFC").replace(/[\s·・]/g,"").replace(/價/g,"價");
 const accepted=(given,expected)=>{const g=norm(given),e=norm(expected);if(g===e)return true;const alts=e.split(/[，,／/]/).map(norm);return alts.includes(g)};
-function shuffle(n){const list=n===M.length?M:R;const short=Array.from({length:n},(_,i)=>i).filter(i=>[...list[i][0]].length<=3);const long=Array.from({length:n},(_,i)=>i).filter(i=>[...list[i][0]].length>3);for(const a of [short,long]){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}const out=[];while(short.length||long.length){if(short.length)out.push(short.pop());if(long.length)out.push(long.pop())}return out},(_,i)=>i);for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function shuffle(n){
+ const list=n===M.length?M:R;
+ const short=Array.from({length:n},(_,i)=>i).filter(i=>[...list[i][0]].length<=3);
+ const long=Array.from({length:n},(_,i)=>i).filter(i=>[...list[i][0]].length>3);
+ for(const a of [short,long]){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+ const out=[];
+ while(short.length||long.length){if(short.length)out.push(short.pop());if(long.length)out.push(long.pop())}
+ return out
+}
 let mode="m",states={m:newState(M.length),r:newState(R.length)};
 function newState(n){return {i:0,s:0,t:0,o:shuffle(n),done:false,miss:[]}}
 function saveName(){const n=document.getElementById("studentName").value.trim();const m=document.getElementById("nameMsg");if(!n){m.textContent="이름을 입력해 주세요.";return}localStorage.setItem("hanja5StudentName",n);m.textContent="이름 저장 완료: "+n}
