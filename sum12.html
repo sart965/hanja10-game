@@ -309,5 +309,13 @@ function startTimer(){
 }
 function closeModal(){document.getElementById("modal").classList.remove("show"); document.getElementById("modal").querySelector("h2").textContent="🎉 모두 찾았어요!";}
 </script>
+
+<style>
+.game-nav{position:fixed;z-index:9999;top:10px;right:10px;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;max-width:96vw}
+.game-nav a{display:inline-block;padding:10px 13px;border:2px solid white;border-radius:22px;background:#ffd15a;color:#172033;text-decoration:none;font-weight:900;font-size:14px;box-shadow:0 3px 10px #0005}
+.game-nav a:first-child{background:#fff}
+@media(max-width:520px){.game-nav{top:6px;right:6px;left:6px;justify-content:center}.game-nav a{font-size:12px;padding:8px 10px}.wrap{padding-top:48px}}
+</style>
+<nav class="game-nav" aria-label="게임 이동"><a href="./">🏠 게임 선택</a><a href="sum10.html">⬅️ 합이 10 게임</a></nav>
 </body>
 </html>
