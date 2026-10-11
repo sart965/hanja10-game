@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>합이 10이 되는 짝꿍 찾기</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    font-family:"Malgun Gothic","Noto Sans KR",sans-serif;
+    background:
+      radial-gradient(circle at 8% 53%,rgba(255,255,255,.06) 0 38px,transparent 39px),
+      radial-gradient(circle at 92% 10%,rgba(255,255,255,.04) 0 26px,transparent 27px),
+      #202b3b;
+    color:#fff;
+  }
+  .wrap{width:min(760px,96vw); text-align:center}
+  .title{
+    display:inline-block; position:relative; padding:12px 30px 13px;
+    margin-bottom:22px; border:3px solid #fff; border-radius:35px;
+    background:#1d2230; box-shadow:0 0 18px rgba(255,255,255,.12);
+    color:#ffd15a; font-size:25px; font-weight:900;
+  }
+  .title:after{
+    content:""; position:absolute; left:50%; bottom:-12px; transform:translateX(-50%);
+    border-left:11px solid transparent; border-right:11px solid transparent;
+    border-top:12px solid #fff;
+  }
+  .panel{
+    position:relative; min-height:590px; padding:52px 20px 24px;
+    border:5px solid #ff9b3d; border-radius:27px;
+    background:#171c29;
+    box-shadow:0 0 24px rgba(255,157,61,.45), inset 0 0 25px rgba(0,0,0,.25);
+  }
+  .hud{
+    position:absolute; top:12px; left:22px; right:22px;
+    display:flex; justify-content:space-between; font-weight:800; font-size:18px;
+  }
+  .hud span{background:#252c3d;padding:7px 13px;border-radius:14px}.timer-danger{color:#ff7070!important;animation:pulse .55s infinite alternate}@keyframes pulse{to{transform:scale(1.06)}}
+  #score{color:#ffd45d}.pairs{color:#8feaff}
+  .board{
+    height:500px; position:relative; overflow:hidden;
+  }
+  .tile{
+    position:absolute; width:54px; height:54px; border-radius:50%;
+    border:3px solid rgba(255,255,255,.9);
+    display:flex; align-items:center; justify-content:center;
+    color:#111; font-size:31px; font-weight:900; cursor:pointer;
+    box-shadow:0 7px 12px rgba(0,0,0,.3);
+    transition:transform .15s, opacity .2s, filter .15s;
+    user-select:none;
+  }
+  .tile:hover{transform:scale(1.1)}
+  .tile.selected{transform:scale(1.16); outline:5px solid #fff; filter:brightness(1.16)}
+  .tile.correct{animation:pop .42s ease forwards}
+  .tile.wrong{animation:shake .3s ease}
+  @keyframes pop{to{transform:scale(1.45);opacity:0}}
+  @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .c1{background:#ffffb9}.c2{background:#ffe5d9}.c3{background:#d8fff8}.c4{background:#dfe5ff}
+  .message{
+    min-height:45px; margin-top:5px; font-size:22px; font-weight:900;
+    color:#ffd35d; text-shadow:0 2px 4px #000;
+  }
+  button{
+    border:0; border-radius:18px; padding:11px 20px; margin:2px;
+    background:#ff9b3d; color:#fff; font-size:17px; font-weight:900; cursor:pointer;
+    box-shadow:0 4px 0 #c86c1b;
+  }
+  button:active{transform:translateY(3px);box-shadow:0 1px 0 #c86c1b}
+  .modal{
+    position:fixed; inset:0; display:none; align-items:center; justify-content:center;
+    background:rgba(0,0,0,.65); z-index:10;
+  }
+  .modal.show{display:flex}
+  .card{
+    width:min(420px,90vw); padding:32px; border-radius:28px; text-align:center;
+    background:#20283a; border:4px solid #ff9b3d; box-shadow:0 0 35px rgba(255,155,61,.55)
+  }
+  .card h2{margin:0 0 10px;color:#ffd35d;font-size:34px}
+  .card p{font-size:22px;line-height:1.6;margin:8px 0 20px}
+ 
+.startScreen{padding:65px 20px 85px}
+.startScreen h1{font-size:34px;color:#ffd35d;line-height:1.3}
+.startScreen p{font-size:20px;line-height:1.6}
+#playerName{width:min(380px,90%);padding:16px;border-radius:16px;border:3px solid #ff9b3d;font-size:21px;text-align:center;margin:18px 0}
+.bigButton{font-size:22px;padding:15px 32px}
+.small{font-size:14px;color:#aaa;margin-top:18px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">🎮 한자방과후 게임</div>
+  <div class="panel">
+    <section id="startScreen" class="startScreen">
+      <h1>합이 10이 되는<br>짝꿍 찾기</h1>
+      <p>학생 이름을 입력하고<br><b>60초 동안</b> 한자 짝꿍을 찾아보세요!</p>
+      <input id="playerName" maxlength="12" placeholder="이름을 입력하세요" autocomplete="off">
+      <br><button class="bigButton" onclick="startStudentGame()">🚀 게임 시작!</button>
+      <div class="small">※ 이름은 이 기기에서 점수 표시용으로만 사용됩니다.</div>
+    </section>
+    <section id="gameScreen" class="hidden">
+    <div class="hud">
+      <span>👤 <b id="displayName">학생</b></span>
+      <span>⭐ <b id="score">0</b>점</span>
+      <span class="pairs">남은 짝 <b id="remain">30</b></span>
+      <span id="timerBox" style="color:#ffd45d">⏱️ <b id="timer">30</b>초</span>
+    </div>
+    <div class="board" id="board"></div>
+    <div class="message" id="message">합이 10이 되는 한자 두 개를 찾아 클릭하세요!</div>
+    <button onclick="restartGame()">🔄 다시 시작</button>
+    </section>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="card">
+    <h2 id="modalTitle">🎉 게임 종료!</h2>
+    <p><b id="resultName">학생</b> 학생<br>최종 점수<br><strong id="finalScore">0</strong>점</p>
+    <button onclick="restartGame()">다시 하기</button>
+    <button onclick="goHome()">처음 화면</button>
+  </div>
+</div>
+
+<script>
+const hanja={1:"一",2:"二",3:"三",4:"四",5:"五",6:"六",7:"七",8:"八",9:"九"};
+const colors=["c1","c2","c3","c4"];
+let playerName = "";
+
+const API_URL="https://script.google.com/macros/s/AKfycbwB7VL7w5PiEde4yoTTmmTq0SjC04rOnpv1sD_w7DNDU9ATItF5FQXpqvuXLGBdJ_yXig/exec";
+
+async function saveScore(){
+  if(!API_URL || API_URL.includes("PASTE_")) return;
+  const payload={
+    name:playerName || "학생",
+    score:score,
+    solved:solved,
+    timeLeft:Math.max(0,timeLeft),
+    finishedAt:new Date().toLocaleString("ko-KR")
+  };
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify(payload)
+    });
+  }catch(e){ console.log("점수 저장 요청:",e); }
+}
+
+function startStudentGame(){
+  playerName = document.getElementById("playerName").value.trim() || "학생";
+  document.getElementById("displayName").textContent = playerName;
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+  newGame();
+}
+function restartGame(){ newGame(); }
+function goHome(){
+  clearInterval(timerId);
+  document.getElementById("modal").classList.remove("show");
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("startScreen").classList.remove("hidden");
+  document.getElementById("playerName").value="";
+}
+
+let tiles=[], selected=null, score=0, solved=0, lock=false, timeLeft=60, timerId=null, gameOver=false;
+
+function shuffle(a){return a.sort(()=>Math.random()-0.5)}
+
+function newGame(){
+  const board=document.getElementById("board");
+  board.innerHTML="";
+  clearInterval(timerId); tiles=[]; selected=null; score=0; solved=0; lock=false; gameOver=false; timeLeft=60;
+  document.getElementById("timer").textContent=60;
+  document.getElementById("timerBox").classList.remove("timer-danger");
+  document.getElementById("score").textContent=0;
+  document.getElementById("remain").textContent=60;
+  document.getElementById("message").textContent="합이 10이 되는 한자 두 개를 찾아 클릭하세요!";
+
+  // 정답 30쌍 = 총 60개의 한자 숫자
+  const values=[];
+  for(let i=0;i<30;i++){
+    const a=[1,2,3,4,5][Math.floor(Math.random()*5)];
+    values.push(a,10-a);
+  }
+  shuffle(values);
+
+  // 매 게임마다 완전히 무작위 위치에 배치
+  // 격자 형태를 없애고, 서로 겹치지 않도록 랜덤 좌표를 찾습니다.
+  const positions=[];
+  const minDistX = 8.5;   // 타일끼리 겹치지 않게 하는 가로 간격(%)
+  const minDistY = 8.5;   // 타일끼리 겹치지 않게 하는 세로 간격(%)
+
+  for(let i=0;i<values.length;i++){
+    let placed=false;
+    for(let attempt=0; attempt<300 && !placed; attempt++){
+      const candidate={
+        x: Math.random()*91,
+        y: Math.random()*88
+      };
+      const ok=positions.every(pos=>{
+        const dx=(candidate.x-pos.x)/minDistX;
+        const dy=(candidate.y-pos.y)/minDistY;
+        return Math.sqrt(dx*dx+dy*dy) > 1.0;
+      });
+      if(ok){
+        positions.push(candidate);
+        placed=true;
+      }
+    }
+
+    // 아주 드물게 공간이 부족하면 가장 덜 겹치는 위치에 배치
+    if(!placed){
+      let best={x:Math.random()*91,y:Math.random()*88}, bestScore=-1;
+      for(let attempt=0;attempt<100;attempt++){
+        const candidate={x:Math.random()*91,y:Math.random()*88};
+        const score=Math.min(...positions.map(pos=>{
+          const dx=(candidate.x-pos.x)/minDistX;
+          const dy=(candidate.y-pos.y)/minDistY;
+          return Math.sqrt(dx*dx+dy*dy);
+        }));
+        if(score>bestScore){bestScore=score;best=candidate;}
+      }
+      positions.push(best);
+    }
+  }
+  shuffle(positions);
+  shuffle(positions);
+
+  values.forEach((v,i)=>createTile(v,positions[i],i));
+  startTimer();
+  // 10쌍을 만들기 위해 각 값의 짝이 모두 존재한다.
+  // 게임 중 풀린 타일은 사라진다.
+}
+
+function createTile(v,pos,i){
+  const el=document.createElement("div");
+  el.className="tile "+colors[i%colors.length];
+  el.textContent=hanja[v];
+  el.dataset.value=v;
+  el.style.left=pos.x+"%";
+  el.style.top=pos.y+"%";
+  el.addEventListener("click",()=>choose(el));
+  document.getElementById("board").appendChild(el);
+  tiles.push(el);
+}
+
+function choose(el){
+  if(gameOver || lock || el.classList.contains("correct") || el===selected) return;
+  if(!selected){
+    selected=el; el.classList.add("selected");
+    document.getElementById("message").textContent="짝꿍 한자를 하나 더 찾아보세요!";
+    return;
+  }
+  const a=Number(selected.dataset.value), b=Number(el.dataset.value);
+  if(a+b===10){
+    lock=true;
+    selected.classList.add("correct"); el.classList.add("correct");
+    score+=10; solved++;
+    document.getElementById("score").textContent=score;
+    document.getElementById("remain").textContent=60-solved;
+    document.getElementById("message").textContent=`정답! ${hanja[a]} + ${hanja[b]} = 10 🎉`;
+    setTimeout(()=>{
+      selected?.remove(); el.remove();
+      selected=null; lock=false;
+      if(solved===30){
+        gameOver=true; clearInterval(timerId);
+        document.getElementById("finalScore").textContent=score;
+        document.getElementById("resultName").textContent=playerName || "학생";
+        document.getElementById("modalTitle").textContent="🎉 모두 찾았어요!";
+        document.getElementById("modal").classList.add("show");
+          saveScore();
+      }
+    },430);
+  }else{
+    selected.classList.add("wrong"); el.classList.add("wrong");
+    document.getElementById("message").textContent="❌ 합이 10이 아니에요. 다시 찾아보세요!";
+    lock=true;
+    setTimeout(()=>{
+      selected.classList.remove("selected","wrong");
+      el.classList.remove("wrong");
+      selected=null; lock=false;
+      document.getElementById("message").textContent="합이 10이 되는 짝꿍을 찾아보세요!";
+    },500);
+  }
+}
+
+function startTimer(){
+  clearInterval(timerId);
+  timerId=setInterval(()=>{
+    if(gameOver) return;
+    timeLeft--;
+    document.getElementById("timer").textContent=timeLeft;
+    if(timeLeft<=10) document.getElementById("timerBox").classList.add("timer-danger");
+    if(timeLeft<=0){
+      clearInterval(timerId);
+      gameOver=true;
+      lock=true;
+      document.getElementById("message").textContent="⏰ 시간 끝! 게임 종료!";
+      document.getElementById("finalScore").textContent=score;
+      document.getElementById("resultName").textContent=playerName || "학생";
+      document.getElementById("modalTitle").textContent="⏰ 시간 종료!";
+      document.getElementById("modal").classList.add("show");
+      saveScore();
+    }
+  },1000);
+}
+function closeModal(){document.getElementById("modal").classList.remove("show"); document.getElementById("modal").querySelector("h2").textContent="🎉 모두 찾았어요!";}
+</script>
+</body>
+</html>
