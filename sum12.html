@@ -43,10 +43,10 @@
     height:500px; position:relative; overflow:hidden;
   }
   .tile{
-    position:absolute; width:54px; height:54px; border-radius:50%;
+    position:absolute; width:54px; height:54px; border-radius:10px;
     border:3px solid rgba(255,255,255,.9);
     display:flex; align-items:center; justify-content:center;
-    color:#111; font-size:31px; font-weight:900; cursor:pointer;
+    color:#111; font-size:36px; line-height:1; font-weight:900; cursor:pointer;
     box-shadow:0 7px 12px rgba(0,0,0,.3);
     transition:transform .15s, opacity .2s, filter .15s;
     user-select:none;
@@ -55,6 +55,8 @@
   .tile.selected{transform:scale(1.16); outline:5px solid #fff; filter:brightness(1.16)}
   .tile.correct{animation:pop .42s ease forwards}
   .tile.wrong{animation:shake .3s ease}
+  .tile.distractor{background:#aeb6c4!important;border:2px dashed #475569;color:#263244;}
+  .tile.distractor:after{content:"×";position:absolute;right:2px;top:-3px;font-size:13px;line-height:13px;color:#b91c1c;font-weight:900;background:#fff;border-radius:50%;width:13px;height:13px;}
   @keyframes pop{to{transform:scale(1.45);opacity:0}}
   @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
   .c1{background:#ffffb9}.c2{background:#ffe5d9}.c3{background:#d8fff8}.c4{background:#dfe5ff}
@@ -124,7 +126,7 @@
 </div>
 
 <script>
-const hanja={1:"一",2:"二",3:"三",4:"四",5:"五",6:"六",7:"七",8:"八",9:"九"};
+const hanja={1:"一",2:"二",3:"三",4:"四",5:"五",6:"六",7:"七",8:"八",9:"九",10:"十"};
 const colors=["c1","c2","c3","c4"];
 let playerName = "";
 
@@ -237,7 +239,7 @@ function newGame(){
 
 function createTile(v,pos,i){
   const el=document.createElement("div");
-  el.className="tile "+colors[i%colors.length];
+  el.className="tile "+colors[i%colors.length]+(v>100?" distractor":"");
   el.textContent=hanja[v>100?v-100:v];
   el.dataset.value=v>100?-1:v;
   el.style.left=pos.x+"%";
