@@ -43,10 +43,10 @@
     height:500px; position:relative; overflow:hidden;
   }
   .tile{
-    position:absolute; width:54px; height:54px; border-radius:50%;
+    position:absolute; width:54px; height:54px; border-radius:10px;
     border:3px solid rgba(255,255,255,.9);
     display:flex; align-items:center; justify-content:center;
-    color:#111; font-size:31px; font-weight:900; cursor:pointer;
+    color:#111; font-size:36px; line-height:1; font-weight:900; cursor:pointer;
     box-shadow:0 7px 12px rgba(0,0,0,.3);
     transition:transform .15s, opacity .2s, filter .15s;
     user-select:none;
@@ -124,7 +124,7 @@
 </div>
 
 <script>
-const hanja={1:"一",2:"二",3:"三",4:"四",5:"五",6:"六",7:"七",8:"八",9:"九"};
+const hanja={1:"一",2:"二",3:"三",4:"四",5:"五",6:"六",7:"七",8:"八",9:"九",10:"十"};
 const colors=["c1","c2","c3","c4"];
 let playerName = "";
 
