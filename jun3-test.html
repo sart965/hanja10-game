@@ -7,7 +7,7 @@
 <h1>📚 준3급 한자 훈음 · 독음 테스트</h1><div class="sub">5급·준4급·준3급 배정한자 중심 한자 훈음 1,000문항과 단어 독음 300문항을 연습해요.</div>
 <div class="namebar"><input id="studentName" placeholder="학생 이름을 입력하세요" autocomplete="name"><button class="btn" id="saveName">이름 저장</button></div><div id="nameMsg" class="sub"></div>
 <div class="tabs"><button id="bm" class="on">① 훈음 1,000문항</button><button id="br">② 독음 300문항</button></div>
-<div id="start"><div id="modeHint" class="sub">현재 연결된 급수별 자료에서 중복을 정리한 한자 풀을 구성해 무작위 1,000자를 출제합니다.</div><div class="counts" id="counts"></div><div class="sub">첫 정답 2점 · 첫 오답은 한 번 더 도전 · 두 번째 오답 0점</div><div style="text-align:center;margin-top:14px"><button class="btn" id="startBtn">테스트 시작</button></div></div>
+<div id="start"><div id="modeHint" class="sub">현재 연결된 급수별 자료에서 중복을 정리한 한자 풀을 구성해 무작위 1,000자를 출제합니다.</div><div class="sub">첫 정답 2점 · 첫 오답은 한 번 더 도전 · 두 번째 오답 0점</div><div style="text-align:center;margin-top:14px"><button class="btn" id="startBtn">테스트 시작</button></div></div>
 <div id="game" class="hidden"><div class="info"><span id="pg"></span><span id="sc"></span></div><div class="progress"><div id="bar"></div></div><div id="event"></div><div id="question"></div><div class="answer"><input id="ans" placeholder="정답 입력" autocomplete="off"><button class="btn" id="check">정답 확인</button></div><div id="msg" class="msg"></div><div class="small">첫 정답 2점 · 재도전 정답 1점 · 두 번 틀리면 정답 공개</div><div class="btnrow"><button class="btn" id="next">다음 문제</button><button class="btn" id="quit" style="background:#667085">테스트 종료</button></div></div>
 <div id="result" class="hidden"><h2 style="text-align:center">🎉 테스트 완료!</h2><div class="score" id="score"></div><div id="resultLine" class="sub" style="text-align:center"></div><p id="wrongCount" class="sub" style="text-align:center"></p><div class="btnrow"><button class="btn" id="again">같은 유형 다시 풀기</button><button class="btn" id="reviewBtn">틀린 문제 확인</button><button class="btn" id="home" style="background:#667085">처음으로</button></div><div id="review" class="review hidden"></div></div>
 </div></div>
@@ -20,7 +20,7 @@ function norm(s){return(s||"").normalize("NFC").replace(/[\s·,，、/]/g,"").re
 function accepted(user,expected){const u=norm(user),e=norm(expected);if(!u)return false;if(u===e)return true;return mode==="m"&&u.length>=2&&e.includes(u)}
 function saveName(){const n=$("studentName").value.trim();if(!n){$("nameMsg").textContent="이름을 입력해 주세요.";return}localStorage.setItem("jun3StudentName",n);$("nameMsg").textContent="저장된 이름: "+n}
 $("saveName").onclick=saveName;
-function drawCounts(){const box=$("counts");box.innerHTML="";const n=mode==="m"?1000:300;count=n;const b=document.createElement("button");b.className="on";b.textContent=n.toLocaleString()+"문항 전체";box.appendChild(b);$("modeHint").textContent=mode==="m"?"5급·준4급·준3급 및 보충 자료를 합친 한자 풀 "+BANK.length+"자에서 무작위 1,000자를 출제합니다.":"2자어·3자어·4자어 300문항을 무작위 출제합니다. 지정하신 사자성어 24문항은 모두 포함됩니다."}
+function drawCounts(){const n=mode==="m"?1000:300;count=n;$("modeHint").textContent=mode==="m"?"5급·준4급·준3급 및 보충 자료를 합친 한자 풀 "+BANK.length+"자에서 무작위 1,000자를 출제합니다.":"2자어·3자어·4자어 300문항을 무작위 출제합니다. 지정하신 사자성어 24문항은 모두 포함됩니다."}
 function setMode(m){mode=m;count=m==="m"?1000:300;$("bm").classList.toggle("on",m==="m");$("br").classList.toggle("on",m==="r");$("start").classList.remove("hidden");$("game").classList.add("hidden");$("result").classList.add("hidden");drawCounts()}
 $("bm").onclick=()=>setMode("m");$("br").onclick=()=>setMode("r");
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
