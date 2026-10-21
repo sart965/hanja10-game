@@ -20,11 +20,11 @@ const norm=s=>(s||"").normalize("NFC").replace(/[\s·・]/g,"").replace(/價/g,"
 const accepted=(given,expected)=>{const g=norm(given),e=norm(expected);if(g===e)return true;const alts=e.split(/[，,／/]/).map(norm);return alts.includes(g)};
 function shuffle(n){
  const list=n===M.length?M:R;
- const short=Array.from({length:n},(_,i)=>i).filter(i=>[...list[i][0]].length<=3);
- const long=Array.from({length:n},(_,i)=>i).filter(i=>[...list[i][0]].length>3);
- for(const a of [short,long]){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
- const out=[];
- while(short.length||long.length){if(short.length)out.push(short.pop());if(long.length)out.push(long.pop())}
+ const groups={2:[],3:[],4:[],other:[]};
+ for(let i=0;i<n;i++){const len=[...list[i][0]].length;groups[len===2?2:len===3?3:len===4?4:"other"].push(i)}
+ for(const a of Object.values(groups)){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+ const out=[],keys=[2,3,4,"other"];let remain=true;
+ while(remain){remain=false;for(const k of keys){if(groups[k].length){out.push(groups[k].pop());remain=true}}}
  return out
 }
 let mode="m",states={m:newState(M.length),r:newState(R.length)};
