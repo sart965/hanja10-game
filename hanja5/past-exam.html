@@ -37,7 +37,7 @@ for(const [h,v] of M) HANS[h]=v;
 let mode="m",items=[],idx=0,score=0,tries=0,miss=[];
 const $=id=>document.getElementById(id);
 function norm(s){return (s||"").normalize("NFC").replace(/[\s·・]/g,"").replace(/[，,]/g,"")}
-function start(){const n=+$("session").value;if(mode==="r"){items=(EXAMS[n].r||"").split(",").map(x=>x.split("=")).filter(x=>x.length===2)}else{items=(HSET[n]||"").trim().split(/\s+/).map(h=>[h,HANS[h]||""])}idx=0;score=0;tries=0;miss=[];render()}
+function start(){const n=+$("session").value;if(mode==="r"){const src=typeof EXAMS[n]==="string"?EXAMS[n]:EXAMS[n].r;items=(src||"").split(",").map(x=>x.split("=")).filter(x=>x.length===2)}else{items=(HSET[n]||"").trim().split(/\s+/).map(h=>[h,HANS[h]||""])}idx=0;score=0;tries=0;miss=[];render()}
 function render(){if(idx>=items.length){finish();return}
 $("counter").textContent=(idx+1)+" / "+items.length;$("points").textContent="점수 "+score;$("bar").style.width=(idx/items.length*100)+"%";
 const [q,a]=items[idx];$("game").innerHTML='<div class="q"><div class="hanja">'+q+'</div><div class="hint">'+(mode==="m"?"이 한자의 훈(뜻)과 음을 입력하세요.":"이 한자어의 독음을 입력하세요.")+'</div></div><div class="answer"><input id="ans" autocomplete="off" placeholder="'+(mode==="m"?"예: 집 가":"예: 회사")+'"><button id="check">정답 확인</button></div><div id="msg" class="msg"></div><div class="small">정답 2점 · 첫 오답은 재도전 · 두 번째 오답은 정답 공개</div>';
