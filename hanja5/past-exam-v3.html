@@ -38,7 +38,7 @@ let mode="m",items=[],idx=0,score=0,tries=0,miss=[];
 const $=id=>document.getElementById(id);
 function norm(s){return (s||"").normalize("NFC").replace(/[\s·・]/g,"").replace(/[，,]/g,"")}
 function start(){const n=+$("session").value;
-if(mode==="r"){const exam=EXAMS[n];const src=(exam&&exam.r)||"";items=src.split(",").map(x=>x.split("=")).filter(x=>x.length===2).map(x=>[x[0].trim(),x[1].trim()]);}
+if(mode==="r"){const exam=EXAMS[n];const src=typeof exam==="string"?exam:((exam&&exam.r)||"");items=src.split(",").map(x=>x.split("=")).filter(x=>x.length===2).map(x=>[x[0].trim(),x[1].trim()]);}
 else{items=(HSET[n]||"").trim().split(/\s+/).filter(Boolean).map(h=>[h,HANS[h]||""])}
 idx=0;score=0;tries=0;miss=[];render()}
 function render(){if(idx>=items.length){finish();return}
