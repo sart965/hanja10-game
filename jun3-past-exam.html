@@ -7,7 +7,7 @@
 </style></head><body><main class="wrap">
 <h1>📚 한국어문회 준3급 훈음 복습</h1>
 <div class="sub">첨부하신 「101~112회 정답지」를 바탕으로 만든 1차 복습판입니다.<br>정답지에 실제로 인쇄된 표현을 그대로 사용하며, 임의로 빠진 문제를 만들어 넣지 않았습니다.</div>
-<div class="row"><select id="session"><option value="112">제112회 · 2026.02.28</option><option value="111">제111회 · 2025.11.15</option></select><select id="kind"><option value="all">전체 복습</option><option value="vocab">1~46번 어휘 정답</option><option value="reading">47~69번 훈음 정답</option></select></div>
+<div class="row"><select id="session"><option value="112">제112회 · 2026.02.28</option></select><select id="kind"><option value="all">전체 복습</option><option value="vocab">1~46번 어휘 정답</option><option value="reading">47~69번 훈음 정답</option></select></div>
 <div class="row"><button id="shuffle">🔀 순서 섞기</button><button id="reset">처음부터</button></div>
 <div class="status"><span id="counter">1 / 69</span><span id="progressText">아직 확인 전</span></div><div class="track"><div class="bar" id="bar"></div></div>
 <section id="game"><div class="card"><div class="pill" id="category">정답지 복습</div><div class="num" id="number">정답 번호 1</div><div class="prompt" id="front">정답을 확인해 보세요</div><div class="answer hidden" id="back"></div><div class="muted" id="help">먼저 정답을 떠올린 뒤 눌러 확인하세요.</div></div><div class="row"><button class="primary" id="reveal">정답 보기</button></div><div class="row"><button id="missed">다시 보기</button><button class="primary" id="next">다음 정답 →</button></div></section>
@@ -17,9 +17,9 @@
 <script>
 const RAW={
 "112":["횡행","기암","파괴","환란","천대","도산","압박","소박","감염","역습","소멸","쇠잔","삼엄","고수","강탈","유고","계류","창연","현안","촉급","도취","이회","현양","은공","세뇌","영경","단항","열렬","만기","연체","완봉","분발","누계","암묵","관철","간척","우려","허락","칠판","능률","노숙","인쇄","농설","혈당","답사","증거 증","그릴 모","다를 수","잡을 구","버섯 균","피할 피","토할 토","납 연","갈 마","갑자기 홀","구슬 주","벼슬아치/관리 리","바칠 공","머금을 함","창성할 창","깨달을 오","연이을 련","범 호","말[禁] 물","솜 면","겸할 겸","날개 익","자 척","의뢰할 뢰"],
-"111":["계획","개척","침투","개입","장식","환송","백호","수업","수뇌","탈취","안면","천도","후보","진동","지적","실각","선회","억류","일몰","화랑","문호","승무","순찰","참을 인","골 곡","얕을 천","토끼 토","어금니 아","밥 반","드물 희","잔치 연","까마귀 오","맏 맹","살찔 비","집 주","속 리","칼 검","우레 뢰","넓을 호","늦을 만","빌 기","잘 면","아침 단","밟을 리","엷을 박","기둥 주","젖을 습"]
+
 };
-const DATA=Object.fromEntries(Object.entries(RAW).map(([s,arr])=>[s,arr.map((a,i)=>({n:i+1,a,cat:i<23?"vocab":"reading"}))]));
+const DATA=Object.fromEntries(Object.entries(RAW).map(([s,arr])=>[s,arr.map((a,i)=>({n:i+1,a,cat:i<46?"vocab":"reading"}))]));
 let deck=[],idx=0,seen=0,marked=new Set(),missed=new Set();
 const $=x=>document.getElementById(x);
 function load(){const s=$("session").value,k=$("kind").value;deck=(DATA[s]||[]).filter(x=>k==="all"||(k==="vocab"&&x.cat==="vocab")||(k==="reading"&&x.cat==="reading"));idx=0;seen=0;marked.clear();missed.clear();$("done").classList.add("hidden");$("game").classList.remove("hidden");draw()}
