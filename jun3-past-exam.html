@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#243b76"><title>한국어문회 준3급 정답지 복습</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f5fb;color:#172033;font-family:Arial,"Noto Sans KR",sans-serif}.wrap{max-width:760px;margin:auto;background:#fff;min-height:100vh;padding:22px 16px 36px}h1{font-size:24px;margin:0 0 7px}.sub{color:#64748b;font-size:14px;line-height:1.65;margin-bottom:18px}.row{display:flex;gap:8px;margin:10px 0}.row>*{flex:1;min-width:0}select,input{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:12px;font-size:16px;background:white}button{border:0;border-radius:12px;padding:13px 15px;font-size:15px;font-weight:800;cursor:pointer;background:#e7ebf5;color:#253354}.primary{background:#30458a;color:white}.pill{display:inline-block;background:#eef2ff;color:#30458a;border-radius:99px;padding:6px 10px;font-size:12px;font-weight:800}.card{border:1px solid #dce3f0;border-radius:22px;padding:24px 16px;margin:16px 0;text-align:center;min-height:225px;display:flex;flex-direction:column;justify-content:center}.num{color:#64748b;font-size:13px}.prompt{font-size:24px;font-weight:900;line-height:1.6;margin:12px 0}.answer{font-size:22px;color:#30458a;font-weight:900;line-height:1.6;white-space:pre-line}.muted{font-size:14px;color:#64748b;line-height:1.6}.status{display:flex;justify-content:space-between;font-weight:800;margin:16px 0 8px}.track{height:7px;background:#e7eaf2;border-radius:9px;overflow:hidden}.bar{height:100%;width:0;background:#6378dc}.notice{background:#f7f8fc;border-radius:14px;padding:13px;color:#64748b;font-size:13px;line-height:1.7;margin-top:18px}.hidden{display:none}.end{text-align:center;padding:25px 0}.score{font-size:42px;font-weight:900;color:#30458a;margin:16px}.small{font-size:13px;color:#64748b}
+@media(max-width:480px){.wrap{padding:18px 12px}.prompt{font-size:21px}.answer{font-size:20px}h1{font-size:21px}}
+</style></head><body><main class="wrap">
+<h1>📚 한국어문회 준3급 훈음 복습</h1>
+<div class="sub">첨부하신 「101~112회 정답지」를 바탕으로 만든 1차 복습판입니다.<br>정답지에 실제로 인쇄된 표현을 그대로 사용하며, 임의로 빠진 문제를 만들어 넣지 않았습니다.</div>
+<div class="row"><select id="session"><option value="112">제112회 · 2026.02.28</option><option value="111">제111회 · 2025.11.15</option></select><select id="kind"><option value="all">전체 복습</option><option value="vocab">1~46번 어휘 정답</option><option value="reading">47~69번 훈음 정답</option></select></div>
+<div class="row"><button id="shuffle">🔀 순서 섞기</button><button id="reset">처음부터</button></div>
+<div class="status"><span id="counter">1 / 69</span><span id="progressText">아직 확인 전</span></div><div class="track"><div class="bar" id="bar"></div></div>
+<section id="game"><div class="card"><div class="pill" id="category">정답지 복습</div><div class="num" id="number">정답 번호 1</div><div class="prompt" id="front">정답을 확인해 보세요</div><div class="answer hidden" id="back"></div><div class="muted" id="help">먼저 정답을 떠올린 뒤 눌러 확인하세요.</div></div><div class="row"><button class="primary" id="reveal">정답 보기</button></div><div class="row"><button id="missed">다시 보기</button><button class="primary" id="next">다음 정답 →</button></div></section>
+<section id="done" class="end hidden"><div class="pill">복습 완료</div><div class="score" id="result">0 / 0</div><div id="summary"></div><div class="row"><button class="primary" id="again">다시 복습하기</button></div></section>
+<div class="notice"><b>안내</b><br>첨부 파일은 정답지이며 시험 문제 원문은 포함하지 않습니다. 따라서 이 버전은 시험 문제를 재현한 모의고사가 아니라, 정답지에 적힌 답을 확인하는 복습용입니다. 다음 단계에서 101~112회 전체 문항을 정확한 문제와 연결하려면 해당 회차 문제지가 필요합니다.</div>
+</main>
+<script>
+const DATA={
+"112":[
+["횡행","기암","파괴","환란","천대","도산","압박","소박","감염","역습","소멸","쇠잔","삼엄","고수","강탈","유고","계류","창연","현안","촉급","도취","이회","현양","은공","세뇌","영경","단항","열렬","만기","연체","완봉","분발","누계","암묵","관철","간척","우려","허락","칠판","능률","노숙","인쇄","농설","혈당","답사","증거 증","그릴 모","다를 수","잡을 구","버섯 균","피할 피","토할 토","납 연","갈 마","갑자기 홀","구슬 주","벼슬아치/관리 리","바칠 공","머금을 함","창성할 창","깨달을 오","연이을 련","범 호","말[禁] 물","솜 면","겸할 겸","날개 익","자 척","의뢰할 뢰"].map((a,i)=>({n:i+1,a,cat:i<46?"vocab":"reading"})),
+["들일 납","계수나무 계","오히려 상","十","辵(辶)","穴","土","水(氺)","声","灯","済","② 佳句","① 老童","② 道試","② 舞技","① 訪問","小","作","安","悲","序","給","愛","反","夫","表","在","內","和","失","富","②","①","②","①","①","小","作","安","悲","序","給","愛","反","夫","表","在","指導","謝禮","確認","旅毒","假想","性格","科目","警備","列擧","論難","尊重","通報","節次","創立","總務","連結","承服","除去","洞察","神聖視","課程","登錄","他人","低價","淸純","受容","密賣"].slice(0,81).map((a,i)=>({n:i+70,a,cat:i<11?"reading":"other"}))
+],
+"111":[
+["계획","개척","침투","개입","장식","환송","백호","수업","수뇌","탈취","안면","천도","후보","진동","지적","실각","선회","억류","일몰","화랑","문호","승무","순찰","명예","고취","연쇄","막사","쌍립","애석","부합","과묵","관장","덕택","의뢰","감면","강림","요새","위태","증발","공경","회개","단아","협박","유도","기초","참을 인","골 곡","얕을 천","토끼 토","어금니 아","밥 반","드물 희","잔치 연","까마귀 오","맏 맹","살찔 비","집 주","속 리","칼 검","우레 뢰","넓을 호","늦을 만","빌 기","잘 면","아침 단","밟을 리","엷을 박","기둥 주","젖을 습"].map((a,i)=>({n:i+1,a,cat:i<45?"vocab":"reading"}))
+]};
+let deck=[],idx=0,seen=0,marked=new Set(),missed=new Set();
+const $=x=>document.getElementById(x);
+function load(){const s=$("session").value,k=$("kind").value;deck=(DATA[s]||[]).filter(x=>k==="all"||(k==="vocab"&&x.cat==="vocab")||(k==="reading"&&x.cat==="reading"));idx=0;seen=0;marked.clear();missed.clear();$("done").classList.add("hidden");$("game").classList.remove("hidden");draw()}
+function draw(){if(!deck.length){$("front").textContent="현재 선택한 범위의 자료가 없습니다.";return}if(idx>=deck.length){finish();return}const x=deck[idx];$("counter").textContent=(idx+1)+" / "+deck.length;$("progressText").textContent="확인 "+seen+"개";$("bar").style.width=(idx/deck.length*100)+"%";$("number").textContent="정답 번호 "+x.n;$("front").textContent=x.cat==="vocab"?"정답 어휘를 떠올려 보세요":x.cat==="reading"?"훈음·한자 정답을 확인하세요":"정답지 표기 확인";$("back").textContent=x.a;$("back").classList.add("hidden");$("help").textContent="정답을 떠올린 뒤 ‘정답 보기’를 누르세요.";$("category").textContent=x.cat==="vocab"?"어휘 정답":x.cat==="reading"?"훈음 정답":"기타 정답"}
+$("reveal").onclick=()=>{if(!deck.length)return;const x=deck[idx];$("back").classList.remove("hidden");$("help").textContent="첨부 정답지의 표기: "+x.a;if(!marked.has(idx)){seen++;marked.add(idx)}$("progressText").textContent="확인 "+seen+"개"};
+$("next").onclick=()=>{idx++;draw()};$("missed").onclick=()=>{if(!deck.length)return;missed.add(idx);$("help").textContent="이 항목은 다시 볼 목록에 표시했습니다."};
+function finish(){$("game").classList.add("hidden");$("done").classList.remove("hidden");$("bar").style.width="100%";$("result").textContent=seen+" / "+deck.length;$("summary").textContent="정답 확인 "+seen+"개 · 다시 보기 표시 "+missed.size+"개"}
+$("session").onchange=load;$("kind").onchange=load;$("reset").onclick=load;$("again").onclick=load;$("shuffle").onclick=()=>{for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}idx=0;draw()};load();
+</script></body></html>
