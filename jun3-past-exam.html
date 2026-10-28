@@ -5,13 +5,12 @@
 <h1>📘 한국어문회 준3급 기출 훈음테스트</h1>
 <div class="sub">실제 기출 문제를 보고 답을 입력하세요. 오답은 한 번 더 도전할 수 있고, 끝나면 틀린 문제만 다시 풀 수 있습니다.</div>
 <label class="small">회차</label><div class="row"><select id="session"><option value="112">제112회 · 3급Ⅱ</option></select><select id="mode"><option value="reading">독음 테스트 (1~45번)</option><option value="hanja">훈음 테스트 (46~72번)</option></select></div>
-<label class="small">학생 이름</label><div class="row"><input id="student" placeholder="이름을 입력하세요"></div>
-<div class="row"><button id="start" class="primary">시험 시작</button><button id="review">틀린 문제 다시 풀기</button></div>
+<div class="row"><button id="review">틀린 문제 다시 풀기</button></div>
 <div id="quiz" class="hidden"><div class="stat"><span id="count"></span><span id="score"></span></div><div class="track"><div class="bar" id="bar"></div></div>
 <section class="card"><div><span class="pill" id="tag">독음</span></div><div class="small" id="number"></div><div class="sentence" id="question"></div><div class="small" id="hint"></div></section>
 <div class="row"><input id="answer" autocomplete="off" placeholder="정답을 입력하세요"><button id="submit" class="primary">정답 확인</button></div><div id="feedback" class="feedback"></div><div class="row"><button id="retry" class="hidden">한 번 더 도전</button><button id="next" class="primary hidden">다음 문제 →</button></div></div>
 <div id="done" class="end hidden"><div class="pill">시험 종료</div><div class="score" id="finalScore"></div><div id="summary"></div><div class="row"><button id="wrongOnly" class="primary">틀린 문제만 다시 풀기</button><button id="restart">처음부터 다시</button></div></div>
-<div class="note">자료 기준: 업로드된 「한국어문회 준3급 독음 기출문제모음(101~112회)」 및 「101~112회 정답지」. 현재는 112회 문항을 먼저 등록한 1차 버전입니다. 나머지 회차도 같은 방식으로 추가할 예정이며, 판독이 불명확한 OCR 문자는 임의로 추정해 넣지 않았습니다.</div>
+<div class="note">제112회 기출문제 기반 연습용입니다. 회차 또는 시험 종류를 선택하면 바로 문제가 시작됩니다.</div>
 </main>
 <script>
 const reading=[
@@ -30,5 +29,5 @@ if(firstTry){firstTry=false;$("feedback").textContent="아쉬워요! 한 번 더
 answered=true;wrong.push(active[i]);$("feedback").textContent="정답: "+expected;$("feedback").className="feedback bad";$("answer").disabled=true;$("submit").classList.add("hidden");$("retry").classList.add("hidden");$("next").classList.remove("hidden")}
 $("submit").onclick=check;$("answer").addEventListener("keydown",e=>{if(e.key==="Enter")check()});$("retry").onclick=()=>{$("retry").classList.add("hidden");$("submit").classList.remove("hidden");$("answer").focus()};$("next").onclick=()=>{i++;draw()};
 function finish(){wrongSet=wrong.slice();$("quiz").classList.add("hidden");$("done").classList.remove("hidden");$("bar").style.width="100%";$("finalScore").textContent=correct+" / "+active.length;$("summary").textContent="틀린 문제 "+wrong.length+"개"+(wrong.length?" · 틀린 문제만 다시 풀 수 있습니다.":" · 모두 맞혔습니다!");$("wrongOnly").disabled=wrong.length===0;$("wrongOnly").style.opacity=wrong.length===0?".5":"1"}
-$("start").onclick=()=>{if(!$("student").value.trim()){alert("학생 이름을 입력해 주세요.");$("student").focus();return}start()};$("review").onclick=()=>{if(wrongSet.length){start(wrongSet,true)}else alert("먼저 시험을 끝내면 틀린 문제를 다시 풀 수 있습니다.")};$("wrongOnly").onclick=()=>{if(!wrong.length)return;const w=wrong.slice();start(w,true)};$("restart").onclick=()=>start();$("mode").onchange=()=>{wrongSet=[];$("quiz").classList.add("hidden");$("done").classList.add("hidden")};
+$("review").onclick=()=>{if(wrongSet.length){start(wrongSet,true)}else alert("먼저 시험을 끝내면 틀린 문제를 다시 풀 수 있습니다.")};$("wrongOnly").onclick=()=>{if(!wrong.length)return;const w=wrong.slice();start(w,true)};$("restart").onclick=()=>start();$("mode").onchange=()=>{wrongSet=[];start()};$("session").onchange=()=>{wrongSet=[];start()};
 </script></body></html>
