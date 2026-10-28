@@ -30,4 +30,6 @@ answered=true;wrong.push(active[i]);$("feedback").textContent="정답: "+expecte
 $("submit").onclick=check;$("answer").addEventListener("keydown",e=>{if(e.key==="Enter")check()});$("retry").onclick=()=>{$("retry").classList.add("hidden");$("submit").classList.remove("hidden");$("answer").focus()};$("next").onclick=()=>{i++;draw()};
 function finish(){wrongSet=wrong.slice();$("quiz").classList.add("hidden");$("done").classList.remove("hidden");$("bar").style.width="100%";$("finalScore").textContent=correct+" / "+active.length;$("summary").textContent="틀린 문제 "+wrong.length+"개"+(wrong.length?" · 틀린 문제만 다시 풀 수 있습니다.":" · 모두 맞혔습니다!");$("wrongOnly").disabled=wrong.length===0;$("wrongOnly").style.opacity=wrong.length===0?".5":"1"}
 $("review").onclick=()=>{if(wrongSet.length){start(wrongSet,true)}else alert("먼저 시험을 끝내면 틀린 문제를 다시 풀 수 있습니다.")};$("wrongOnly").onclick=()=>{if(!wrong.length)return;const w=wrong.slice();start(w,true)};$("restart").onclick=()=>start();$("mode").onchange=()=>{wrongSet=[];start()};$("session").onchange=()=>{wrongSet=[];start()};
+// 페이지에 처음 접속하면 기본 선택된 독음 문제를 즉시 표시
+start();
 </script></body></html>
